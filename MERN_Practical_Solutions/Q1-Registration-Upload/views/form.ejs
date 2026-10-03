@@ -1,0 +1,10 @@
+<!doctype html><html><head><title>Registration</title></head><body><h2>Registration</h2>
+<% if(errors.length){%><ul style="color:red"><% errors.forEach(e=>{%><li><%=e.msg%></li><%}) %></ul><%}%>
+<% if(result){%><h3>Submitted details</h3><table border="1" cellpadding="8"><% ['username','email','gender','hobbies'].forEach(k=>{%><tr><th><%=k%></th><td><%=Array.isArray(result[k])?result[k].join(', '):result[k]%></td></tr><%})%>
+<tr><th>Profile</th><td><img width="100" src="/uploads/<%=result.profile%>"><br><a href="/download/<%=result.profile%>">Download profile</a></td></tr>
+<tr><th>Other pics</th><td><%result.others.forEach(p=>{%><img width="100" src="/uploads/<%=p%>"> <a href="/download/<%=p%>">Download</a><%})%></td></tr></table><a href="/">New form</a><%}else{%>
+<form method="post" enctype="multipart/form-data">
+Username <input name="username" value="<%=data.username||''%>"><br>Password <input type="password" name="password"><br>Confirm <input type="password" name="confirm"><br>Email <input name="email" value="<%=data.email||''%>"><br>
+Gender <%['Female','Male','Other'].forEach(g=>{%><label><input type="radio" name="gender" value="<%=g%>" <%=data.gender===g?'checked':''%>><%=g%></label><%})%><br>
+Hobbies <%['Reading','Music','Sports'].forEach(h=>{%><label><input type="checkbox" name="hobbies" value="<%=h%>" <%=([].concat(data.hobbies||[]).includes(h))?'checked':''%>><%=h%></label><%})%><br>
+Profile pic <input type="file" name="profile" accept="image/*"><br>Other pics <input type="file" name="others" accept="image/*" multiple><br><button>Submit</button></form><%}%></body></html>

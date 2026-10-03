@@ -1,0 +1,6 @@
+const express=require('express'),mongoose=require('mongoose'),jwt=require('jsonwebtoken'),bcrypt=require('bcryptjs'),cors=require('cors');const app=express();app.use(cors());app.use(express.json());mongoose.connect('mongodb://127.0.0.1:27017/erp_practical');
+const Emp=mongoose.model('Emp',new mongoose.Schema({empid:String,name:String,email:String,password:String}));const Leave=mongoose.model('Leave',new mongoose.Schema({empid:String,date:String,reason:String,grant:{type:String,default:'No'}}));
+app.post('/login',async(r,s)=>{let e=await Emp.findOne({empid:r.body.empid});if(!e||!await bcrypt.compare(r.body.password,e.password))return s.status(401).json({message:'Invalid login'});s.json({token:jwt.sign({id:e._id,empid:e.empid},'jwt-secret')})});
+const auth=(r,s,n)=>{try{r.user=jwt.verify(r.headers.authorization.split(' ')[1],'jwt-secret');n()}catch{s.sendStatus(401)}};
+app.get('/profile',auth,async(r,s)=>s.json(await Emp.findById(r.user.id).select('-password')));app.get('/leaves',auth,async(r,s)=>s.json(await Leave.find({empid:r.user.empid})));
+app.post('/leaves',auth,async(r,s)=>s.json(await Leave.create({empid:r.user.empid,date:r.body.date,reason:r.body.reason})));app.listen(4005,()=>console.log('API 4005'));

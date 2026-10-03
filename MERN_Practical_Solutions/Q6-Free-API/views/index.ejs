@@ -1,0 +1,1 @@
+<h2>Weather utility</h2><form action='/weather'><input name='city' placeholder='City' required><button>Get weather</button></form><%if(weather){%><p>Temperature: <%=weather.current_condition[0].temp_C%> °C</p><p>Condition: <%=weather.current_condition[0].weatherDesc[0].value%></p><%}%>

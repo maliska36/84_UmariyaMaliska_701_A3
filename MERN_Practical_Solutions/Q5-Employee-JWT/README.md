@@ -1,0 +1,1 @@
+Employee JWT API starter. Run backend and React separately. Demo routes shown in app; configure MongoDB.
